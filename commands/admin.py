@@ -3,6 +3,7 @@ import asyncio
 import random
 from discord.ext import commands
 from discord.utils import get
+from config.secrets import *
 from utils.checks import *
 from pymongo import MongoClient
 import logging

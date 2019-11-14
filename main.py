@@ -55,7 +55,7 @@ class SWRPGBot(Bot):
             await guild.system_channel.send(to_send)
 
     async def on_message(self, message):
-        ret = super(Bot, self).on_message(message)
+        ret = await super(Bot, self).on_message(message)
         if message.author.id == BOT_ID: 
             return ret
 
