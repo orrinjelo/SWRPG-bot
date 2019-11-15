@@ -55,9 +55,9 @@ class SWRPGBot(Bot):
         await channel.send(to_send)
 
     async def on_message(self, message):
-        ret = await super(Bot, self).on_message(message)
+        #ret = await super(Bot, self).on_message(message)
         if message.author.id == BOT_ID: 
-            return ret
+            return None 
 
         if 'cat' in message.content.lower() or 'kitty' in message.content.lower():
             await message.add_reaction("🐈")
