@@ -50,9 +50,9 @@ class SWRPGBot(Bot):
 
     async def on_member_join(self, member):
         guild = member.guild
-        if guild.system_channel is not None:
-            to_send = 'Welcome {0.mention} to {1.name}!'.format(member, guild)
-            await guild.system_channel.send(to_send)
+        channel = self.get_channel(WELCOME_CHANNEL)
+        to_send = 'Welcome {0.mention} to {1.name}!  Take a look over at the #rules and #first-steps.'.format(member, guild)
+        await channel.send(to_send)
 
     async def on_message(self, message):
         ret = await super(Bot, self).on_message(message)
