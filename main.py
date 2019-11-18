@@ -46,6 +46,7 @@ class SWRPGBot(Bot):
         logger.info('Connected!')
         logger.info('Username: {0.name}\nID: {0.id}'.format(self.user))
         channel = self.get_channel(BOT_DEBUG_CHANNEL)
+        self.mongo_client = MongoClient()
         self.commands_db = self.mongo_client['commands']
         self.com = self.commands_db.com
         await channel.send("I'm alive!")
