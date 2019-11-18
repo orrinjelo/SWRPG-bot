@@ -19,6 +19,8 @@ class Admin(commands.Cog):
         self.mongo_client = MongoClient()
         self.rp_db = self.mongo_client['rp']
         self.xp = self.rp_db.xp
+        self.commands_db = self.mongo_client['commands']
+        self.com = self.commands_db.com        
 
     @commands.command(pass_context=True)
     @commands.has_role(ADMIN_ROLE)
@@ -114,3 +116,31 @@ class Admin(commands.Cog):
     @commands.has_role(ADMIN_ROLE)
     async def say(self, ctx, *message):
         await ctx.send(' '.join(message))
+
+    @commands.command(pass_context=True, aliases=['tag','new_command', 'map'])
+    @commands.has_role(MOD_ROLE)
+    async def add_command(self, ctx, command: str, *, new_command=''):
+        res = self.com.find_one(
+            {
+                "tag": command
+            }
+        )
+        if not res:
+            self.com.insert_one(
+                {
+                    'tag': command,
+                    'replacement': new_command
+                }
+            )
+        else:
+            self.com.update_one(
+                {
+                    "tag": command
+                },
+                {
+                    '$set': {
+                        'replacement': new_command
+                    }
+                }
+            )
+        await ctx.message.add_reaction("👍")

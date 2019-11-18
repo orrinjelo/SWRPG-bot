@@ -46,6 +46,8 @@ class SWRPGBot(Bot):
         logger.info('Connected!')
         logger.info('Username: {0.name}\nID: {0.id}'.format(self.user))
         channel = self.get_channel(BOT_DEBUG_CHANNEL)
+        self.commands_db = self.mongo_client['commands']
+        self.com = self.commands_db.com
         await channel.send("I'm alive!")
 
     async def on_member_join(self, member):
@@ -72,6 +74,28 @@ class SWRPGBot(Bot):
                 await self.cogs['Roleplay'].log_post(message)
             except:
                 logger.debug('No Roleplay cog.')
+
+        try:
+            try:
+                command = message.content.split()[0]
+            except IndexError:
+                command = message.content
+            logger.info('Got {}'.format(command))
+            res = self.com.find_one(
+                {
+                    "tag": command
+                }
+            )
+            if res:
+                if res['replacement']:
+                    await message.channel.send('{}'.format(res['replacement']))
+                    return
+            else:
+                logger.info('but it doesn\'t exist in the database.')
+        except errors.ServerSelectionTimeoutError:
+            logger.error('Cannot connect to MongoDB')
+        except Exception as e:
+            logger.error('{}'.format(e))
 
         await self.process_commands(message)    
 
